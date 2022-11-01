@@ -1,11 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
 
 # Create your models here.
 
-class User(AbstractBaseUser):
+class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     telegram_id = models.IntegerField()
     avatar = models.ImageField(upload_to="user/avatar")
@@ -19,9 +19,11 @@ class User(AbstractBaseUser):
             (3, 'Deliver'),
             (4, 'Operator'),
             (5, 'Customer'),
-        ), default=5
+            (6, 'User')
+        ), default=6
     )
-
+    def __str__(self):
+        return self.username
 
 class Slider(models.Model):
     title = models.CharField(max_length=255)
@@ -61,6 +63,9 @@ class Product(models.Model):
     sale = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Blog(models.Model):
