@@ -1,10 +1,26 @@
+from rest_framework.response import Response
 from django.shortcuts import render
 # Create your views here.
 from rest_framework.decorators import api_view
-from .serializer import *
 from .models import *
-from rest_framework.response import Response
+from api.serializer import *
 
+@api_view(['GET'])
+def Get_Slider(request):
+    slider = Slider.objects.filter().order_by('-id')[:3]
+    ser = SliderSerializer(slider, many=True)
+
+    return Response(ser.data)
+
+@api_view(['GET'])
+def Get_Company(request):
+    company = Company.objects.all()
+    for i in company:
+        if i.clients >= 500:
+            company_new = i
+    ser = CompanySerializer(company_new, many=True)
+
+    return Response(ser.data)
 @api_view(['GET'])
 def Popular_Products(request):
     product = Product.objects.filter(rating=5).order_by('-id')[:20]
